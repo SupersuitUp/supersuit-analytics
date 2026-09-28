@@ -1,0 +1,13 @@
+# Changelog
+
+## 0.1.0 (2026-09-28)
+
+First release, extracted from Freedom's usage analytics. It adds:
+
+- Recipients chosen by the operator, each with its own tier (presence, usage or full).
+- Skill allow and deny lists, and per-field drops.
+- Built-in file, webhook and Firestore transports.
+- The copy-first record-then-send pipeline.
+- The privacy primitives: `scrub`, `closed`, `hashId` and `errorClass`.
+- `summarize` for the receiving side.
+- A CLI.
