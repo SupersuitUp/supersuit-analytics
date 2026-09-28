@@ -158,5 +158,5 @@ export function createAnalytics({
     snapshots: recent(join(sentDir(id), "snapshots"), { limit: 5 }),
   });
 
-  return { appDir, status, preview, share, snapshot, announce, sent, config };
+  return { appDir, optOutFile: optOut, status, preview, share, snapshot, announce, sent, config };
 }

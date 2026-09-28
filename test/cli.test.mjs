@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { mkdtempSync, readFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { tmpdir } from "node:os";
 import { execFileSync, spawnSync } from "node:child_process";
@@ -41,4 +41,14 @@ test("a secret in the config is refused with exit 1; a bad command is exit 2", (
   const bad = spawnSync(process.execPath, [BIN, "add", "x", "--tier", "secret", "--file", "/tmp/x", "--app-dir", dir], { env });
   assert.equal(bad.status, 1);
   assert.equal(spawnSync(process.execPath, [BIN, "nope"], { env }).status, 2);
+});
+
+test("--opt-out-file makes status and off agree with the embedding app's own switch", () => {
+  const dir = mkdtempSync(join(tmpdir(), "ssa-cli-"));
+  const marker = join(dir, "app-no-analytics");
+  run(dir, "add", "w", "--tier", "presence", "--file", join(dir, "w.jsonl"));
+  run(dir, "off", "--opt-out-file", marker);
+  assert.ok(existsSync(marker));
+  assert.match(run(dir, "status", "--opt-out-file", marker), /sharing: off \(opted out/);
+  assert.match(run(dir, "status"), /sharing: on/, "without the flag it is the package's own switch");
 });

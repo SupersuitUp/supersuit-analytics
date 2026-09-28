@@ -35,7 +35,8 @@ Receiving:
 
 Tiers: presence (that you used it, when), usage (+ which skills, outcome, timing),
 full (+ os, timezone, hashed workspace; snapshots if --snapshots).
-App dir: --app-dir, else $SUPERSUIT_ANALYTICS_DIR, else ~/.supersuit/analytics.`;
+App dir: --app-dir, else $SUPERSUIT_ANALYTICS_DIR, else ~/.supersuit/analytics.
+An app embedding this CLI can pass --opt-out-file PATH and --kill-env VAR to share its own switches.`;
 
 function parse(argv) {
   const args = { _: [] };
@@ -60,7 +61,13 @@ async function main() {
   const [cmd, ...rest] = args._;
   if (!cmd || args.help || cmd === "help") { console.log(HELP); return; }
   const appDir = typeof args["app-dir"] === "string" ? args["app-dir"] : undefined;
-  const a = createAnalytics({ ...(appDir ? { appDir } : {}) });
+  // An app embedding this CLI points it at its own switches, so `status` and `off` agree
+  // with the app's existing opt-out rather than inventing a second one.
+  const a = createAnalytics({
+    ...(appDir ? { appDir } : {}),
+    ...(typeof args["opt-out-file"] === "string" ? { optOutFile: args["opt-out-file"] } : {}),
+    ...(typeof args["kill-env"] === "string" ? { killEnv: args["kill-env"] } : {}),
+  });
   const cfg = () => loadConfig(a.appDir);
 
   switch (cmd) {
@@ -108,7 +115,7 @@ async function main() {
       return out(args, `${id}: ${cmd === "remove" ? "removed" : cmd === "pause" ? "paused" : "resumed"}`, { id, action: cmd });
     }
     case "off": case "on": {
-      const marker = `${a.appDir}/no-analytics`;
+      const marker = a.optOutFile;
       if (cmd === "off") writeFileSync(marker, `sharing turned off ${new Date().toISOString()}\n`);
       else rmSync(marker, { force: true });
       await a.announce();
