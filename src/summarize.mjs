@@ -23,7 +23,8 @@ export function summarize(records, { days = 30, now = new Date() } = {}) {
     if (!people.has(who)) people.set(who, { from: who, events: 0, days: new Set(), skills: new Map(), ok: 0, failed: 0, sessions: new Set(), activeMs: 0, sharing: null });
     const p = people.get(who);
     p.events += 1;
-    p.days.add(new Date(t).toISOString().slice(0, 10));
+    const d = new Date(t);  // the reader's local day, which is the day they would name
+    p.days.add(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`);
     if (r.kind === "sharing-off" || r.kind === "sharing-on") p.sharing = r.kind;
     if (r.skill) {
       p.skills.set(r.skill, (p.skills.get(r.skill) || 0) + 1);

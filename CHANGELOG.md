@@ -11,3 +11,4 @@ First release, extracted from Freedom's usage analytics. It adds:
 - The privacy primitives: `scrub`, `closed`, `hashId` and `errorClass`.
 - `summarize` for the receiving side.
 - A CLI.
+- Monthly copy files and `summarize`'s active days use the local calendar, not UTC.

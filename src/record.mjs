@@ -91,7 +91,9 @@ export function recent(dir, { limit = 10 } = {}) {
 export function appendCopy(dir, record, now = new Date()) {
   try {
     mkdirSync(dir, { recursive: true });
-    const month = now.toISOString().slice(0, 7);
+    // The operator's local month, not UTC's: a line written late on the 31st belongs to the
+    // month they were living in when they wrote it.
+    const month = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
     appendFileSync(join(dir, `${month}.jsonl`), JSON.stringify(record) + "\n", { mode: 0o600 });
     return true;
   } catch { return false; }
