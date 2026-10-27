@@ -11,7 +11,7 @@ the recipient was fixed to one backend. Here you pick the recipients.
 
 ```bash
 npx @supersuit/analytics from gary
-npx @supersuit/analytics add wilson --tier usage --file ~/Dropbox/shared/gary.jsonl --deny "desiet:*"
+npx @supersuit/analytics add wilson --tier usage --file ~/Dropbox/shared/gary.jsonl --deny "personal:*"
 npx @supersuit/analytics preview wilson      # the exact record Wilson would get
 ```
 
@@ -44,7 +44,7 @@ Each recipient gets exactly one tier.
 
 You can narrow any tier further:
 
-- `--deny "desiet:*,freedom:read-messages"` never mentions those skills. A trailing `*` covers a whole namespace.
+- `--deny "personal:*,freedom:read-messages"` never mentions those skills. A trailing `*` covers a whole namespace.
 - `--allow "cw:*"` limits the recipient to the listed skills and nothing else.
 - `--drop errorClass` removes one field the tier would otherwise send.
 

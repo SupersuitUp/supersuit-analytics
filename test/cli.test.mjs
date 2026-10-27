@@ -14,14 +14,14 @@ test("add, status, preview, emit, sent, summarize: the operator's whole loop", (
   const dir = mkdtempSync(join(tmpdir(), "ssa-cli-"));
   const file = join(mkdtempSync(join(tmpdir(), "ssa-cli-shared-")), "gary.jsonl");
   run(dir, "from", "gary");
-  run(dir, "add", "wilson", "--tier", "usage", "--file", file, "--deny", "desiet:*", "--drop", "errorClass");
+  run(dir, "add", "wilson", "--tier", "usage", "--file", file, "--deny", "personal:*", "--drop", "errorClass");
   assert.match(run(dir, "status"), /wilson \(wilson\) tier:usage via file/);
 
   const preview = JSON.parse(run(dir, "preview", "wilson", "--event", '{"skill":"cw:ship","ok":true,"errorClass":"E","os":"darwin"}'));
   assert.deepEqual(Object.keys(preview).sort(), ["ok", "skill", "ts"]);
 
   execFileSync(process.execPath, [BIN, "emit", "--app-dir", dir], { input: '{"skill":"cw:ship","ok":true}', env });
-  execFileSync(process.execPath, [BIN, "emit", "--app-dir", dir], { input: '{"skill":"desiet:add-photos"}', env });
+  execFileSync(process.execPath, [BIN, "emit", "--app-dir", dir], { input: '{"skill":"personal:add-photos"}', env });
   const got = readFileSync(file, "utf8").trim().split("\n").map((l) => JSON.parse(l));
   assert.equal(got.length, 1);
   assert.equal(got[0].from, "gary");

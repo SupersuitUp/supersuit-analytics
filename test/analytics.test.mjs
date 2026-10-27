@@ -16,7 +16,7 @@ beforeEach(() => {
 
 const lines = (p) => existsSync(p) ? readFileSync(p, "utf8").trim().split("\n").filter(Boolean).map((l) => JSON.parse(l)) : [];
 const recipient = (id, tier, extra = {}) => ({ id, name: id, tier, transport: { type: "file", path: join(shared, `${id}.jsonl`) }, ...extra });
-const EVENT = { skill: "desiet:add-photos", ok: true, durationMs: 900, errorClass: "TypeError", os: "darwin 25", tzOffset: -420, workspace: "0123456789abcdef", prompt: "text of my prompt", path: "/Users/me/secret" };
+const EVENT = { skill: "personal:add-photos", ok: true, durationMs: 900, errorClass: "TypeError", os: "darwin 25", tzOffset: -420, workspace: "0123456789abcdef", prompt: "text of my prompt", path: "/Users/me/secret" };
 
 // ---- schema: the allowlist is the privacy posture -------------------------------------------
 
@@ -29,7 +29,7 @@ test("an undeclared field never leaves, whatever the tier", () => {
 test("each tier gets exactly its fields and nothing above", () => {
   assert.deepEqual(Object.keys(project({ ...EVENT, kind: "x", ts: new Date() }, { tier: "presence" })).sort(), ["kind", "ts"]);
   const usage = project(EVENT, { tier: "usage" });
-  assert.equal(usage.skill, "desiet:add-photos");
+  assert.equal(usage.skill, "personal:add-photos");
   assert.equal(usage.os, undefined, "os is full-tier");
   assert.equal(usage.workspace, undefined);
   assert.equal(project(EVENT, { tier: "full" }).os, "darwin 25");
@@ -66,20 +66,20 @@ test("skill filters: deny wins, allow is the whole world, namespaces glob", () =
   assert.equal(skillVisible(r, "freedom:save-my-progress"), true);
   assert.equal(skillVisible(r, "freedom:read-messages"), false);
   assert.equal(skillVisible(r, "cw:ship"), true);
-  assert.equal(skillVisible(r, "desiet:add-photos"), false);
+  assert.equal(skillVisible(r, "personal:add-photos"), false);
   assert.equal(skillVisible(r, undefined), true, "a presence line has no skill to hide");
 });
 
 // ---- the pipeline ----------------------------------------------------------------------------
 
 test("share: each recipient gets its own projection, with the local copy first", async () => {
-  saveConfig(dir, { from: "gary", recipients: [recipient("wilson", "usage", { skills: { deny: ["desiet:*"] } }), recipient("company", "presence"), recipient("me", "full")] });
+  saveConfig(dir, { from: "gary", recipients: [recipient("wilson", "usage", { skills: { deny: ["personal:*"] } }), recipient("company", "presence"), recipient("me", "full")] });
   const a = createAnalytics({ appDir: dir });
   await a.share(EVENT);
   await a.share({ skill: "cw:ship", ok: false, errorClass: "Error" });
 
   const w = lines(join(shared, "wilson.jsonl"));
-  assert.equal(w.length, 1, "the desiet skill is hidden from wilson");
+  assert.equal(w.length, 1, "the personal skill is hidden from wilson");
   assert.equal(w[0].skill, "cw:ship");
   assert.equal(w[0].from, "gary");
   assert.equal(w[0].os, undefined);
@@ -120,7 +120,7 @@ test("a transport that throws never throws out of share", async () => {
 });
 
 test("preview shows the exact record, and says when a skill is hidden", () => {
-  saveConfig(dir, { recipients: [recipient("wilson", "usage", { skills: { deny: ["desiet:*"] } })] });
+  saveConfig(dir, { recipients: [recipient("wilson", "usage", { skills: { deny: ["personal:*"] } })] });
   const a = createAnalytics({ appDir: dir });
   assert.match(a.preview("wilson", EVENT).reason, /hidden/);
   assert.equal(a.preview("wilson", { skill: "cw:ship" }).record.skill, "cw:ship");

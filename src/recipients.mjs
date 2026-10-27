@@ -11,7 +11,7 @@
  *     "recipients": [
  *       { "id": "wilson", "name": "Wilson", "tier": "usage",
  *         "transport": { "type": "file", "path": "~/Dropbox/shared/gary.jsonl" },
- *         "skills": { "deny": ["desiet:*"] },
+ *         "skills": { "deny": ["personal:*"] },
  *         "drop": ["errorClass"],
  *         "snapshots": false,
  *         "paused": false }
@@ -75,7 +75,7 @@ export function saveConfig(appDir, config) {
   renameSync(tmp, path);
 }
 
-/** `desiet:*` matches every skill in that namespace; anything else is exact. */
+/** `personal:*` matches every skill in that namespace; anything else is exact. */
 const matches = (skill, pattern) =>
   pattern.endsWith("*") ? skill.startsWith(pattern.slice(0, -1)) : skill === pattern;
 
