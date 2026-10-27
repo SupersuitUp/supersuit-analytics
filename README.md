@@ -4,21 +4,25 @@ Share how you use your agent setup (your supersuit) with whoever you choose: a t
 company, a community, anyone. You pick how much each one sees. Your own copy of everything is
 written before anything leaves your machine. No dependencies. Needs Node 20 or later.
 
-It was extracted from the usage analytics in [Freedom](https://getfreedom.wiki). In Freedom
+It was extracted from the usage analytics in [Supersuit](https://wiki.supersuit.co). In Supersuit
 the recipient was fixed to one backend. Here you pick the recipients.
+
+**It is not published to npm.** Supersuit ships its own vendored copy (`scripts/vendor-supersuit-analytics.mjs` in Supersuit
+copies it from this repository), so nothing installs it from a registry. To run it on its own, clone this repository and
+call the CLI with Node. Version 0.1.0 on npm (2026-09-28) is the only published release and is not maintained.
 
 ## 30 seconds
 
 ```bash
-npx @supersuit/analytics from gary
-npx @supersuit/analytics add wilson --tier usage --file ~/Dropbox/shared/gary.jsonl --deny "personal:*"
-npx @supersuit/analytics preview wilson      # the exact record Wilson would get
+node bin/supersuit-analytics.mjs from gary
+node bin/supersuit-analytics.mjs add wilson --tier usage --file ~/Dropbox/shared/gary.jsonl --deny "personal:*"
+node bin/supersuit-analytics.mjs preview wilson      # the exact record Wilson would get
 ```
 
 Wilson reads the shared file back:
 
 ```bash
-npx @supersuit/analytics summarize ~/Dropbox/shared/gary.jsonl
+node bin/supersuit-analytics.mjs summarize ~/Dropbox/shared/gary.jsonl
 ```
 
 ```
