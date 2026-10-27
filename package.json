@@ -1,6 +1,6 @@
 {
   "name": "@supersuit/analytics",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Share how you use your agent supersuit with whoever you choose (a teammate, a company, anyone), at a privacy tier you choose, with your own copy of everything written first. Zero dependencies.",
   "type": "module",
   "bin": { "supersuit-analytics": "bin/supersuit-analytics.mjs" },

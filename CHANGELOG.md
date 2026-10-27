@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.1 (2026-10-27)
+
+Neutral namespace in examples; no behavior change.
+
 ## 0.1.0 (2026-09-28)
 
 First release, extracted from Freedom's usage analytics. It adds:
